@@ -14,13 +14,11 @@
 
 ---
 
-## What is this?
+Each loop is a complete, runnable audit-and-fix system in one markdown file — a mission, an execution DAG, a hostile adversarial reviewer, and quantitative exit criteria, all sharing one contract defined in [`PROTOCOL.md`](PROTOCOL.md).
 
-A **loop** is a complete, runnable audit-and-fix system in a single markdown file — not a one-off prompt. Each loop defines a mission, a multi-step execution DAG, per-node tool specs, a hostile adversarial reviewer, quantitative exit criteria, and a `RUN PROMPT` you can paste straight into Claude Code (or any capable coding agent) right now.
-
-Every loop shares one contract, defined once in [`PROTOCOL.md`](PROTOCOL.md): confidence scoring on every output, a failure taxonomy that routes instead of just failing, retry/escalation budgets, checkpointed rollback on a dedicated branch, and a FREE-MAD adversarial debate step before anything is called "done." That's what makes these *loops* — self-correcting systems, not single-shot prompts.
-
-15 loops cover backend/API security, frontend a11y, mobile, agent-runtime security, memory architecture, UX/UI, infra/DevOps, CI/CD, data layer, AI red-teaming, adversarial review, test/mutation/chaos engineering, architectural drift, governance telemetry, and self-optimization.
+<p align="center">
+  <img src="docs/loop-cards.svg" alt="The 15 agentic loops, color-coded by risk class" width="100%">
+</p>
 
 ## Table of Contents
 
@@ -72,16 +70,14 @@ Three ways to use this repo:
 
 ## How It Works
 
-Every loop shares one execution contract, defined once in [`PROTOCOL.md`](PROTOCOL.md) so the loop files themselves stay focused on their domain:
+One shared contract in [`PROTOCOL.md`](PROTOCOL.md) — read it for the full spec:
 
-- **4-step protocol** — parse & ingest → scope context → monitored execution → adversarial check, before anything is marked done.
-- **Confidence blocks** — every output carries a calibrated confidence score, a risk level, and an explicit `unknown` list the reviewer has to attack first.
-- **Failure taxonomy** — 13 named failure classes (syntax, logic, security, dependency, permission, hallucination...) each with a defined route, so nothing just silently "fails."
-- **Rollback engineering** — every mutation happens on a checkpointed branch; rollback is `git reset --hard` plus a governance event, never a scramble.
-- **Adversarial debate (FREE-MAD)** — a hostile reviewer persona attacks the work before it's accepted; silent unanimous agreement with no cited evidence forces a second round.
-- **Quantitative exit criteria** — every loop defines measurable PASS conditions; a loop that can't meet them terminates as `FAIL-with-artifact`, never a silent success.
-
-Read [`PROTOCOL.md`](PROTOCOL.md) for the full spec — it's the shortest path to understanding all 15 loops at once.
+- **4-step protocol** — ingest → scope → execute → adversarial check.
+- **Confidence blocks** — every output scored, risk-rated, with explicit unknowns.
+- **13-class failure taxonomy** — routes, never just "fails."
+- **Checkpointed rollback** — every mutation on an isolated branch.
+- **FREE-MAD debate** — a hostile reviewer persona before anything ships.
+- **Quantitative exit criteria** — `FAIL-with-artifact` beats silent success.
 
 ## Installing as a Claude Code Skill
 

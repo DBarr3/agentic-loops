@@ -1,7 +1,7 @@
 ---
 name: loop-mobile-native
 loop-id: LOOP-03
-description: Dual-layer (JS/Dart + native) audit: bridge traffic, ANR hunters, list virtualization, manifest hardening, keystore/keychain, pinning
+description: Dual-layer (JS/Dart + native) audit — bridge traffic, ANR hunters, list virtualization, manifest hardening, keystore/keychain, pinning
 domain: Mobile & Native Platforms
 risk-class: branch-mutating
 default-debate: FREE-MAD

@@ -1,7 +1,7 @@
 ---
 name: loop-self-optimization
 loop-id: LOOP-15
-description: Meta-loop: failure→root-cause→fix→generalized-pattern store; audits and improves the loop MDs + procedural memory themselves
+description: Meta-loop — failure→root-cause→fix→generalized-pattern store; audits and improves the loop MDs + procedural memory themselves
 domain: Continuous Evaluation
 risk-class: branch-mutating (loops only)
 default-debate: RA-CR

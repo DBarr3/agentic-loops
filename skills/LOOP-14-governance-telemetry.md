@@ -1,7 +1,7 @@
 ---
 name: loop-governance-telemetry
 loop-id: LOOP-14
-description: Audits the autonomous system itself: governance ledger trends, retry/rollback rates, token efficiency, benchmark suite runs, agent trace quality
+description: Audits the autonomous system itself — governance ledger trends, retry/rollback rates, token efficiency, benchmark suite runs, agent trace quality
 domain: Runtime Observability
 risk-class: read-only
 default-debate: FREE-MAD

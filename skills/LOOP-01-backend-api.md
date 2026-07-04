@@ -1,7 +1,7 @@
 ---
 name: loop-backend-api
 loop-id: LOOP-01
-description: AST-driven backend audit: OWASP API Top 10 (BOLA/BOPLA/SSRF/auth/resource limits), N+1 queries, dead code, logging hygiene
+description: AST-driven backend audit — OWASP API Top 10 (BOLA/BOPLA/SSRF/auth/resource limits), N+1 queries, dead code, logging hygiene
 domain: Backend & API Architecture
 risk-class: branch-mutating
 default-debate: FREE-MAD

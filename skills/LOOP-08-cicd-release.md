@@ -1,7 +1,7 @@
 ---
 name: loop-cicd-release
 loop-id: LOOP-08
-description: Actions/pipelines audit: caching, test gating, artifact signing, rollback automation, canary/blue-green, feature flags
+description: Actions/pipelines audit — caching, test gating, artifact signing, rollback automation, canary/blue-green, feature flags
 domain: CI/CD & Release Engineering
 risk-class: branch-mutating
 default-debate: FREE-MAD
