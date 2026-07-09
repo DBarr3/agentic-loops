@@ -1,6 +1,6 @@
 ---
 name: loop-idea-arena
-loop-id: LOOP-20
+loop-id: LOOP-19
 description: Convergent ideation engine — diverse candidate ideas generated in parallel enter one shared adversarial-debate-and-mutation arena, converge to a single provenance-tracked synthesized idea, and get packaged for execution-agent handoff
 domain: Ideation & Convergent Synthesis
 risk-class: read-only (produces a spec/handoff artifact, never mutates code itself)
@@ -10,15 +10,15 @@ model-tiers: {scan: cheap, audit: mid, verdict: reasoning}
 
 # Mission
 
-Turn one seed request into a single, defensible idea — without the two failure modes that plague ad-hoc brainstorming: **accidental convergence** (three "independent" generations that are secretly the same idea in different words) and **elimination bias** (picking one candidate wholesale and quietly throwing away its rivals' good parts). LOOP-20 forces genuine diversity at generation time, puts all candidates into **one shared arena simultaneously** — every idea can attack every other idea and propose mutations that graft strengths across them, in the same rounds, not a bracket of pairwise duels — and converges on a synthesized idea whose every element is traceable back to the candidate(s) that earned it. Losing candidates' unused strengths are never silently discarded; they land in a rejected-idea register. The loop's only mutation surface is documentation: it emits a spec-level handoff packet for an execution agent to build. It never touches application code itself.
+Turn one seed request into a single, defensible idea — without the two failure modes that plague ad-hoc brainstorming: **accidental convergence** (three "independent" generations that are secretly the same idea in different words) and **elimination bias** (picking one candidate wholesale and quietly throwing away its rivals' good parts). LOOP-19 forces genuine diversity at generation time, puts all candidates into **one shared arena simultaneously** — every idea can attack every other idea and propose mutations that graft strengths across them, in the same rounds, not a bracket of pairwise duels — and converges on a synthesized idea whose every element is traceable back to the candidate(s) that earned it. Losing candidates' unused strengths are never silently discarded; they land in a rejected-idea register. The loop's only mutation surface is documentation: it emits a spec-level handoff packet for an execution agent to build. It never touches application code itself.
 
-This is distinct from [PROTOCOL]'s inline adversarial check and from LOOP-11's standalone debate engine: LOOP-11 is one generator vs one (or more) reviewer(s) refining a single artifact. LOOP-20's arena is N candidates co-present, all mutating and attacking each other at once — LOOP-11 is invoked here only as the final gate over the synthesized handoff packet (§ Adversarial Check).
+This is distinct from [PROTOCOL]'s inline adversarial check and from LOOP-11's standalone debate engine: LOOP-11 is one generator vs one (or more) reviewer(s) refining a single artifact. LOOP-19's arena is N candidates co-present, all mutating and attacking each other at once — LOOP-11 is invoked here only as the final gate over the synthesized handoff packet (§ Adversarial Check).
 
 # Trigger (when the operator runs this)
 
 - A seed request needs more than one take before committing engineering time to it — new feature direction, a build-vs-buy call, a redesign, a go-to-market angle.
 - Before handing a fuzzy "figure out how to do X" ask to an execution agent — run the idea through the arena first so the execution agent gets a spec, not a vibe.
-- On demand: `Run LOOP-20 on <seed request>`.
+- On demand: `Run LOOP-19 on <seed request>`.
 
 # Inputs (target repo/dir, scope flags)
 
@@ -32,7 +32,7 @@ This is distinct from [PROTOCOL]'s inline adversarial check and from LOOP-11's s
 # Preconditions
 
 - Seed request carries an extractable goal and at least one hard constraint; otherwise node 1 halts and asks the operator, rather than inventing scope.
-- `_loopstate/LOOP-20/<run-id>/` writable for arena logs, provenance table, and the rejected-idea register.
+- `_loopstate/LOOP-19/<run-id>/` writable for arena logs, provenance table, and the rejected-idea register.
 - LOOP-11 available (inline) for the final adversarial check over the synthesized idea and handoff packet.
 - Read-only to any codebase: this loop may Read existing architecture docs/context for the coherence check, but never Edits application code.
 
@@ -125,13 +125,13 @@ Maximum 2 rounds; disagreements surviving round 2 are recorded as operator-defer
 # Approval Gates (only deviations from [PROTOCOL] §10)
 
 - Nodes 1–8 (generation, arena, synthesis, coherence) are read/report work — automatic, per [PROTOCOL] §10's "Read / audit / report" class.
-- **Node 9's dispatch of the handoff packet to an execution agent requires explicit operator review before dispatch**, even though LOOP-20 itself never mutates code — the packet is about to hand write authority to a downstream agent, so the human sees scope, non-goals, and provenance before that agent starts building. This is stricter than the default automatic class for read-only artifacts specifically because of what the artifact triggers next.
+- **Node 9's dispatch of the handoff packet to an execution agent requires explicit operator review before dispatch**, even though LOOP-19 itself never mutates code — the packet is about to hand write authority to a downstream agent, so the human sees scope, non-goals, and provenance before that agent starts building. This is stricter than the default automatic class for read-only artifacts specifically because of what the artifact triggers next.
 
 # RUN PROMPT
 
 ```
-Run LOOP-20 on <seed request> (candidates: 3, execution-target: <who receives the handoff>).
-Follow LOOP-20-idea-arena.md under [PROTOCOL] (see PROTOCOL.md in this repo).
+Run LOOP-19 on <seed request> (candidates: 3, execution-target: <who receives the handoff>).
+Follow LOOP-19-idea-arena.md under [PROTOCOL] (see PROTOCOL.md in this repo).
 Force genuine diversity across the 3 generated ideas (distinct angle/risk/cost profile
 per candidate) — reject near-duplicates before they enter the arena. Run one shared
 arena (all 3 candidates co-present, not pairwise elimination): every candidate must
