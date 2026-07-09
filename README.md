@@ -66,21 +66,56 @@ Three ways to use this repo:
 | [13](skills/LOOP-13-drift-debt.md) | Architectural Drift & Debt | Continuous Evaluation | read-only | Detects layer violations, circular deps, dead APIs/services; scores technical debt 0–100 across six axes, trended over time. |
 | [14](skills/LOOP-14-governance-telemetry.md) | Governance & Telemetry | Runtime Observability | read-only | Audits the autonomous system itself: is it improving, looping, degrading, wasting tokens, or getting less reliable? |
 | [15](skills/LOOP-15-self-optimization.md) | Self-Optimization Meta-Loop | Continuous Evaluation | branch-mutating (loops only) | The recursive-improvement loop: failure → root cause → fix → generalized pattern → proposed diff to the loops themselves. Human-gated always. |
-**Risk classes:** `read-only` never touches your code · `branch-mutating` works only on an isolated loop branch, never main · `infra-touching` reads live infrastructure and proposes plans, never applies changes without explicit approval.
+
+**Risk classes:** `read-only` never touches your code · `branch-mutating` works only on an isolated loop branch, never main · `infra-touching` reads live infrastructure and proposes plans, never applies changes without explicit approval. (Same three classes apply to the five meta-loops below.)
 
 ## Meta-Loops — Loops That Run the Other 15
 
-LOOP-01 through LOOP-15 each audit one part of your stack. The five loops below are a different kind of thing: instead of a target *surface*, each takes other loops (or plain-language goals) as its input. Point one at the base 15 and it plans them, parallelizes them, hardens them continuously, tunes their knobs, or turns three competing ideas about which one to run into one converged plan.
+LOOP-01 through LOOP-15 each audit one fixed surface. The five loops below take *other loops* — or a plain-language goal — as their input instead. Notation below: `[NN + NN]` = loops feeding in, `→` = then, `?` = branch point.
 
-**[LOOP-20 — Goal Pipeline](skills/LOOP-20-goal-pipeline.md) is the one to start with.** It's the front door: hand it a goal in plain language ("harden the API and clean up dead code") and it validates the goal, decomposes it into a dependency-checked task graph, matches each task to a real loop in this catalog (LOOP-01, LOOP-12, whichever fits — never a forced guess), adversarially reviews the *plan itself* before anything runs, then dispatches — fanning out independent branches via LOOP-16 when the DAG proves they're actually independent. It keeps re-checking that DAG as execution proceeds, and if a plan turns out to contain a contradiction, it routes back to goal clarification instead of running on a broken plan. Everything else in this catalog is a tool LOOP-20 knows how to reach for.
+**[LOOP-20 — Goal Pipeline](skills/LOOP-20-goal-pipeline.md) is the one to start with** — the front door. Hand it a goal in plain English and it plans, checks, and dispatches the other 19 for you. Everything below is a tool LOOP-20 already knows how to reach for.
 
-| # | Loop | Domain | Risk | What it does |
-|---|------|--------|------|---------------|
-| [16](skills/LOOP-16-fanout-orchestrator.md) | Fan-Out Orchestrator | Multi-Agent Orchestration | branch-mutating | Decomposes one task into independent units, dispatches each to its own autonomous worker loop with no synchronization barrier, and defines merge/collection and failure-isolation policy. LOOP-20 hands it every parallel branch its DAG proves is safe. |
-| [17](skills/LOOP-17-sparring-partners.md) | Sparring Partners | Continuous Adversarial Hardening | branch-mutating | A standing red-team/blue-team co-evolution loop — breaker attacks, builder hardens, both report continuously to the human; tracks breaker win-rate trend and root-cause vs symptom-fix ratio. Point it at anything LOOP-01/LOOP-05/etc. already cleared once and want kept honest. |
-| [18](skills/LOOP-18-the-ratchet.md) | The Ratchet | Verified Incremental Tuning | branch-mutating | One-change-at-a-time tuning primitive: measure, change one variable, re-measure, weld the change permanently only on a verified improvement — never batches changes, never un-welds. Any loop that needs to safely tune one threshold/retry-count/TTL calls this instead of hand-rolling its own measure-and-commit logic. |
-| [19](skills/LOOP-19-idea-arena.md) | Idea Arena | Ideation & Convergent Synthesis | read-only | Generates diverse candidate ideas in parallel, runs them through one shared adversarial-debate-and-mutation arena, converges to a provenance-tracked synthesized idea, and packages it for agent handoff — including "which of the other 15 loops should we build/run next." |
-| **[20](skills/LOOP-20-goal-pipeline.md)** | **Goal Pipeline** | **Goal Intake & Plan Validation** | read-only→branch | **The catalog's entry gate.** Validates a plain-language goal, decomposes it into a cycle-checked task DAG matched against LOOP-01..19, adversarially reviews the plan, dispatches (via LOOP-16 for independent branches), and keeps re-verifying the DAG as execution proceeds — routing contradictions back to goal clarification instead of running on a broken plan. |
+---
+
+**[16 — Fan-Out Orchestrator](skills/LOOP-16-fanout-orchestrator.md)** · `branch-mutating`
+Split one task into independent pieces, run each on its own worker in parallel, no waiting on the slowest one.
+```
+16: [01 + 02 + 07] → prove independent → 3 workers run parallel → collect → merge report
+```
+*Example: backend audit, frontend audit, and infra audit don't touch the same files — run all three at once instead of one after another.*
+Pairs with: any two+ loops with non-overlapping scope · gated by LOOP-20's DAG proof.
+
+**[17 — Sparring Partners](skills/LOOP-17-sparring-partners.md)** · `branch-mutating`
+Standing attacker vs. defender match on one artifact — keeps something already audited from rotting back to unsafe.
+```
+17: breaker=[10] vs builder=[01] → shared findings/fix queue → round N → trend to human
+```
+*Example: LOOP-10 keeps red-teaming your auth module, LOOP-01 keeps patching what it finds, LOOP-12 regression-tests every builder fix so nothing silently reverts.*
+Pairs with: 10 (breaker's toolkit) + 01/05 (builder's toolkit) + 12 (regression backstop).
+
+**[18 — The Ratchet](skills/LOOP-18-the-ratchet.md)** · `branch-mutating`
+Change one thing, measure, keep it only if proven better — never batches, never un-welds.
+```
+18: [06 + 15] mutate → 11 debate → pass? weld : revert + loop
+```
+*Example: LOOP-06 finds a UX patch candidate, LOOP-15 generalizes it into one testable change, LOOP-11 adversarially debates whether it's actually an improvement — pass welds it permanently, fail reverts and the ratchet tries a different single change next round.*
+Pairs with: any loop that has one number/patch to tune (06, 08 timeouts, 12 fuzz corpus size) + 11 for the verdict.
+
+**[19 — Idea Arena](skills/LOOP-19-idea-arena.md)** · `read-only`
+Diverse candidate ideas, one shared debate-and-mutation arena, one converged idea with a paper trail.
+```
+19: idea1=[13 debt] + idea2=[14 drift] + idea3=[10 gap] → arena debate+mutate → converged idea → handoff
+```
+*Example: three loops each surface a different "what should we fix next" candidate — the arena doesn't just pick one, it merges the strongest parts of all three into one spec, then hands it to LOOP-20 to plan and dispatch.*
+Pairs with: any loops with open findings to seed candidates from + 11 (final gate on the handoff) + 20 (receives it).
+
+**[20 — Goal Pipeline](skills/LOOP-20-goal-pipeline.md)** · `read-only→branch` · **flagship**
+Plain-language goal in, validated dependency-checked plan out, dispatched into whichever of 01–19 fit.
+```
+20: goal="harden API + dedupe code" → decompose → [01] + [13] independent → 16 fan-out → 11 reviews plan → dispatch
+```
+*Example: one goal implies two unrelated tasks — LOOP-20 proves they don't conflict, hands both to LOOP-16 to run in parallel instead of you manually sequencing them, and keeps re-checking the plan as results come in.*
+Pairs with: everything — this is the loop that decides which of the other 19 to run.
 
 ## How It Works
 
