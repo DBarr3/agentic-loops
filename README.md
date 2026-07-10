@@ -2,7 +2,7 @@
 
 # Agentic Loops
 
-**20 autonomous, self-contained "loop" systems that turn Claude Code (or any AI coding agent) into a full audit-and-fix pipeline — with built-in adversarial review, confidence scoring, and safe rollback.**
+**21 autonomous, self-contained "loop" systems that turn Claude Code (or any AI coding agent) into a full audit-and-fix pipeline — with built-in adversarial review, confidence scoring, and safe rollback.**
 
 [![GitHub stars](https://img.shields.io/github/stars/DBarr3/agentic-loops?style=social)](https://github.com/DBarr3/agentic-loops/stargazers)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -17,7 +17,7 @@
 Each loop is a complete, runnable audit-and-fix system in one markdown file — a mission, an execution DAG, a hostile adversarial reviewer, and quantitative exit criteria, all sharing one contract defined in [`PROTOCOL.md`](PROTOCOL.md).
 
 <p align="center">
-  <img src="docs/loop-cards.svg" alt="The 20 agentic loops, color-coded by risk class" width="100%">
+  <img src="docs/loop-cards.svg" alt="The 15 base agentic loops, color-coded by risk class" width="100%">
 </p>
 
 ## Table of Contents
@@ -67,11 +67,11 @@ Three ways to use this repo:
 | [14](skills/LOOP-14-governance-telemetry.md) | Governance & Telemetry | Runtime Observability | read-only | Audits the autonomous system itself: is it improving, looping, degrading, wasting tokens, or getting less reliable? |
 | [15](skills/LOOP-15-self-optimization.md) | Self-Optimization Meta-Loop | Continuous Evaluation | branch-mutating (loops only) | The recursive-improvement loop: failure → root cause → fix → generalized pattern → proposed diff to the loops themselves. Human-gated always. |
 
-**Risk classes:** `read-only` never touches your code · `branch-mutating` works only on an isolated loop branch, never main · `infra-touching` reads live infrastructure and proposes plans, never applies changes without explicit approval. (Same three classes apply to the five meta-loops below.)
+**Risk classes:** `read-only` never touches your code · `branch-mutating` works only on an isolated loop branch, never main · `infra-touching` reads live infrastructure and proposes plans, never applies changes without explicit approval. (Same three classes apply to the meta-loops and integration below.)
 
 ## Meta-Loops — Loops That Run the Other 15
 
-LOOP-01 through LOOP-15 each audit one fixed surface. The five loops below take *other loops* — or a plain-language goal — as their input instead. Notation below: `[NN + NN]` = loops feeding in, `→` = then, `?` = branch point.
+LOOP-01 through LOOP-15 each audit one fixed surface. LOOP-16 through LOOP-20 are the five base meta-loops: they take *other loops* — or a plain-language goal — as their input. LOOP-21 is the first integration loop, composing all five into a full merge lifecycle. Notation below: `[NN + NN]` = loops feeding in, `→` = then, `?` = branch point.
 
 **[LOOP-20 — Goal Pipeline](skills/LOOP-20-goal-pipeline.md) is the one to start with** — the front door. Hand it a goal in plain English and it plans, checks, and dispatches the other 19 for you. Everything below is a tool LOOP-20 already knows how to reach for.
 
@@ -116,6 +116,14 @@ Plain-language goal in, validated dependency-checked plan out, dispatched into w
 ```
 *Example: one goal implies two unrelated tasks — LOOP-20 proves they don't conflict, hands both to LOOP-16 to run in parallel instead of you manually sequencing them, and keeps re-checking the plan as results come in.*
 Pairs with: everything — this is the loop that decides which of the other 19 to run.
+
+**[21 — Merge Protocol](skills/LOOP-21-merge-protocol.md)** · `branch-mutating` · **integration**
+Anchor the real remote trunk, capture a PR and its goals immutably, adversarially simplify it one verified change at a time, prove CI actually ran, merge only with operator approval, then replay the original contract over the entire integrated trunk and open a scoped follow-up PR for real gaps.
+```
+21: PR → capture remote+PR+goals → [20 plan + 16/17/19 inspect + 11 debate] → 18 ratchet → 08 gate → approve+merge → whole-trunk replay → follow-up PR
+```
+*Example: a PR is green on its own diff, but after merge an untouched caller violates the original acceptance criteria — the post-merge replay catches the seam and prepares a narrow, lineage-linked follow-up instead of declaring victory at the merge button.*
+Composes: all five meta-loops (16–20) · hard gates: 08 (real CI liveness), 11 (hostile verdict), 15 (process learning only).
 
 ## How It Works
 
